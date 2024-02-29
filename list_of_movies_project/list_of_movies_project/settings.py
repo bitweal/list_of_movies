@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'movies_manager',
     'rest_framework',
+    'django_filters',
 ]
 
 REST_FRAMEWORK = {

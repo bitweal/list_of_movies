@@ -3,14 +3,18 @@ from rest_framework.response import Response
 from .models import Movie
 from .serializers import MovieSerializer
 from rest_framework.pagination import PageNumberPagination
+from django_filters.rest_framework import DjangoFilterBackend
+from .filters import MovieFilter
 
 
 class MovieViewSet(viewsets.ViewSet):
     pagination_class = PageNumberPagination
+    filter_backends = [DjangoFilterBackend]
+    filter_set_class = MovieFilter
 
     def list(self, request):
         paginator = self.pagination_class()
-        movies = Movie.objects.all()
+        movies = self.filter_set_class(request.GET, queryset=Movie.objects.all()).qs
         result_page = paginator.paginate_queryset(movies, request)
         serializer = MovieSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
