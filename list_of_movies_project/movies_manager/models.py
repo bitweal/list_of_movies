@@ -18,8 +18,8 @@ class Actor(models.Model):
 class Movie(models.Model):
     title = models.CharField(max_length=100)
     year = models.IntegerField()
-    director = models.ForeignKey(Director, on_delete=models.CASCADE)
-    actors = models.ManyToManyField(Actor)
+    directors = models.ManyToManyField(Director, related_name='directors')
+    actors = models.ManyToManyField(Actor, related_name='actors')
 
     def __str__(self):
         return self.title
