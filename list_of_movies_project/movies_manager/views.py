@@ -2,13 +2,18 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from .models import Movie
 from .serializers import MovieSerializer
+from rest_framework.pagination import PageNumberPagination
 
 
 class MovieViewSet(viewsets.ViewSet):
+    pagination_class = PageNumberPagination
+
     def list(self, request):
+        paginator = self.pagination_class()
         movies = Movie.objects.all()
-        serializer = MovieSerializer(movies, many=True)
-        return Response(serializer.data)
+        result_page = paginator.paginate_queryset(movies, request)
+        serializer = MovieSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
     def retrieve(self, request, pk=None):
         try:
